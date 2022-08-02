@@ -17,10 +17,14 @@ namespace TaskManager.BLL.DTO
         public string Password { get; set; }
 
         public Guid CompanyId { get; set; }
+        public CompanyDTO Company { get; set; }
+
+        public List<ProjectDTO> Projects { get; set; }
+
+        public List<TaskDTO> Tasks { get; set; }
 
         public Guid RoleId { get; set; }
-
-
+        public RoleDTO Role { get; set; }
 
     }
 }

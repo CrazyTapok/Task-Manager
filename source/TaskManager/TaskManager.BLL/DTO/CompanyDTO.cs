@@ -11,5 +11,9 @@ namespace TaskManager.BLL.DTO
         public Guid Id { get; set; }
 
         public string Title { get; set; }
+
+        public List<ProjectDTO> Projects { get; set; }
+
+        public List<EmployeeDTO> Employees { get; set; }
     }
 }

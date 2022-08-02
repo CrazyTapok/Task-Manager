@@ -10,6 +10,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.DAL.EF;
+using AutoMapper;
+using TaskManager.BLL.MappingProfiles;
 
 namespace TaskManager.WEB
 {
@@ -31,8 +33,12 @@ namespace TaskManager.WEB
             // добавляем контекст ApplicationContext в качестве сервиса в приложение
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(connection));
+            
+
+            services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddControllersWithViews();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
