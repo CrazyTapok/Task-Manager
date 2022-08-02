@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace TaskManager.BLL.DTO
 {
@@ -15,6 +14,11 @@ namespace TaskManager.BLL.DTO
         public Guid ManagerId { get; set; }
 
         public Guid CompanyId { get; set; }
+        public CompanyDTO Company { get; set; }
+
+        public List<EmployeeDTO> Employees { get; set; }
+
+        public List<TaskDTO> Tasks { get; set; }
 
     }
 }

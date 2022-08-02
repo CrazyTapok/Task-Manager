@@ -11,6 +11,7 @@ namespace TaskManager.BLL.DTO
         public Guid Id { get; set; }
 
         public Guid ProjectId { get; set; }
+        public ProjectDTO Project { get; set; }
 
         public string Title { get; set; }
 
@@ -19,8 +20,10 @@ namespace TaskManager.BLL.DTO
         public TaskStatus Status { get; set; }
 
         public Guid CreateEmployeeId { get; set; }
+        public EmployeeDTO CreateEmployee { get; set; }
 
         public Guid AssinedEmployeeId { get; set; }
+        public EmployeeDTO AssinedEmployee { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
