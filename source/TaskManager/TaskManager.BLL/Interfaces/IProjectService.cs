@@ -12,10 +12,10 @@ namespace TaskManager.BLL.Interfaces
 
         Task<IEnumerable<ProjectDTO>> GetAllProjects(CancellationToken cancellationToken);
 
-        void EditeEmployee(ProjectDTO dto, CancellationToken cancellationToken);
+        Task EditProject(ProjectDTO dto, CancellationToken cancellationToken);
 
-        void CreateProject(ProjectDTO dto, CancellationToken cancellationToken);
+        Task CreateProject(ProjectDTO dto, CancellationToken cancellationToken);
 
-        void DeleteProject(Guid? id, CancellationToken cancellationToken);
+        Task DeleteProject(Guid? id, CancellationToken cancellationToken);
     }
 }

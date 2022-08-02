@@ -12,11 +12,11 @@ namespace TaskManager.BLL.Interfaces
 
         Task<IEnumerable<EmployeeDTO>> GetAllEmployees(CancellationToken cancellationToken);
 
-        void EditeEmployee(EmployeeDTO dto, CancellationToken cancellationToken);
+        Task EditEmployee(EmployeeDTO dto, CancellationToken cancellationToken);
 
-        void CreateEmployee(EmployeeDTO dto, CancellationToken cancellationToken);
+        Task CreateEmployee(EmployeeDTO dto, CancellationToken cancellationToken);
 
-        void DeleteEmployee(Guid? id, CancellationToken cancellationToken);
+        Task DeleteEmployee(Guid? id, CancellationToken cancellationToken);
     }
 }
 

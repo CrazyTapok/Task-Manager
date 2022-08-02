@@ -12,10 +12,10 @@ namespace TaskManager.BLL.Interfaces
 
         Task<IEnumerable<CompanyDTO>> GetAllCompanies(CancellationToken cancellationToken);
 
-        void EditeCompany(CompanyDTO dto, CancellationToken cancellationToken);
+        Task EditCompany(CompanyDTO dto, CancellationToken cancellationToken);
 
-        void CreateComany(CompanyDTO dto, CancellationToken cancellationToken);
+        Task CreateComany(CompanyDTO dto, CancellationToken cancellationToken);
 
-        void DeleteCompany(Guid? id, CancellationToken cancellationToken);
+        Task DeleteCompany(Guid? id, CancellationToken cancellationToken);
     }
 }

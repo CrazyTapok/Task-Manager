@@ -9,6 +9,7 @@ using TaskManager.BLL.Infrastructure;
 using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.EF;
 using TaskManager.DAL.Entities;
+using Task = System.Threading.Tasks.Task;
 
 namespace TaskManager.BLL.Services
 {
@@ -21,13 +22,13 @@ namespace TaskManager.BLL.Services
 
         public CompanyService(ApplicationContext dbContext, IMapper mapper)
         {
-            _context = dbContext;
+            _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
         }
 
-        public async void CreateComany(CompanyDTO dto, CancellationToken cancellationToken)
+        public async Task CreateComany(CompanyDTO dto, CancellationToken cancellationToken)
         {
-            Company company = await _context.Companies.FirstOrDefaultAsync(p => p.Title == dto.Title, cancellationToken);
+            var company = await _context.Companies.FirstOrDefaultAsync(p => p.Title == dto.Title, cancellationToken);
 
             if (company != null)
                 throw new ValidationException("A company with that name already exists", "");
@@ -37,12 +38,12 @@ namespace TaskManager.BLL.Services
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async void DeleteCompany(Guid? id, CancellationToken cancellationToken)
+        public async Task DeleteCompany(Guid? id, CancellationToken cancellationToken)
         {
             if (id.HasValue)
                 throw new ValidationException("Company ID not set", "");
 
-            Company company = await _context.Companies.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            var company = await _context.Companies.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
             if (company == null)
                 throw new ValidationException("Company not found.", "");
@@ -52,7 +53,7 @@ namespace TaskManager.BLL.Services
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async void EditeCompany(CompanyDTO dto, CancellationToken cancellationToken)
+        public async Task EditCompany(CompanyDTO dto, CancellationToken cancellationToken)
         {
             _context.Companies.Update(_mapper.Map<Company>(dto));
             
@@ -61,10 +62,7 @@ namespace TaskManager.BLL.Services
 
         public async Task<IEnumerable<CompanyDTO>> GetAllCompanies(CancellationToken cancellationToken)
         {
-            var companies = await _context.Companies
-                .Include(p => p.Projects)
-                .Include(e => e.Employees)
-                .ToListAsync(cancellationToken);
+            var companies = await _context.Companies.ToListAsync(cancellationToken);
 
             return _mapper.Map<IEnumerable<CompanyDTO>>(companies);
         }
@@ -74,7 +72,7 @@ namespace TaskManager.BLL.Services
             if (!id.HasValue)
                 throw new ValidationException("Company ID not set", "");
             
-            Company company = await _context.Companies.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+            var company = await _context.Companies.FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
 
             return _mapper.Map<CompanyDTO>(company);
         }

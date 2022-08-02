@@ -9,6 +9,7 @@ using TaskManager.BLL.Infrastructure;
 using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.EF;
 using TaskManager.DAL.Entities;
+using Task = System.Threading.Tasks.Task;
 
 namespace TaskManager.BLL.Services
 {
@@ -21,14 +22,14 @@ namespace TaskManager.BLL.Services
 
         public EmployeeService(ApplicationContext dbContext, IMapper mapper)
         {
-            _context = dbContext;
+            _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
         }
 
 
-        public async void CreateEmployee(EmployeeDTO dto, CancellationToken cancellationToken)
+        public async Task CreateEmployee(EmployeeDTO dto, CancellationToken cancellationToken)
         {
-            Employee employee = await _context.Employees.FirstOrDefaultAsync(e => e.Email == dto.Email, cancellationToken);
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Email == dto.Email, cancellationToken);
 
             if (employee != null)
                 throw new ValidationException("An employee with that Email already exists", "");
@@ -38,12 +39,12 @@ namespace TaskManager.BLL.Services
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async void DeleteEmployee(Guid? id, CancellationToken cancellationToken)
+        public async Task DeleteEmployee(Guid? id, CancellationToken cancellationToken)
         {
             if (id.HasValue)
                 throw new ValidationException("Employee ID not set", "");
 
-            Employee employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
             if (employee == null)
                 throw new ValidationException("Employee not found.", "");
@@ -53,7 +54,7 @@ namespace TaskManager.BLL.Services
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async void EditeEmployee(EmployeeDTO dto, CancellationToken cancellationToken)
+        public async Task EditEmployee(EmployeeDTO dto, CancellationToken cancellationToken)
         {
             _context.Employees.Update(_mapper.Map<Employee>(dto));
             
@@ -77,7 +78,7 @@ namespace TaskManager.BLL.Services
             if (!id.HasValue)
                 throw new ValidationException("Employee ID not set", "");
 
-            Employee employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
             return _mapper.Map<EmployeeDTO>(employee);
         }

@@ -20,7 +20,7 @@ namespace TaskManager.BLL.Services
 
         public RoleService(ApplicationContext dbContext, IMapper mapper)
         {
-            _context = dbContext;
+            _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
         }
 
@@ -37,7 +37,7 @@ namespace TaskManager.BLL.Services
             if (!id.HasValue)
                 throw new ValidationException("Role ID not set", "");
 
-            Role role = await _context.Roles.FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
 
             return _mapper.Map<RoleDTO>(role);
         }

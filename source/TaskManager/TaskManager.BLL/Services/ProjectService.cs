@@ -9,6 +9,7 @@ using TaskManager.BLL.Infrastructure;
 using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.EF;
 using TaskManager.DAL.Entities;
+using Task = System.Threading.Tasks.Task;
 
 namespace TaskManager.BLL.Services
 {
@@ -20,14 +21,14 @@ namespace TaskManager.BLL.Services
 
         public ProjectService(ApplicationContext dbContext, IMapper mapper)
         {
-            _context = dbContext;
+            _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper;
         }
 
 
-        public async void CreateProject(ProjectDTO dto, CancellationToken cancellationToken)
+        public async Task CreateProject(ProjectDTO dto, CancellationToken cancellationToken)
         {
-            Project project = await _context.Projects.FirstOrDefaultAsync(p => p.Title == dto.Title, cancellationToken);
+            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Title == dto.Title, cancellationToken);
 
             if (project != null)
                 throw new ValidationException("A project with that name already exists", "");
@@ -37,12 +38,12 @@ namespace TaskManager.BLL.Services
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async void DeleteProject(Guid? id, CancellationToken cancellationToken)
+        public async Task DeleteProject(Guid? id, CancellationToken cancellationToken)
         {
             if (id.HasValue)
                 throw new ValidationException("Project ID not set", "");
 
-            Project project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
             if (project == null)
                 throw new ValidationException("Project not found.", "");
@@ -52,7 +53,7 @@ namespace TaskManager.BLL.Services
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async void EditeEmployee(ProjectDTO dto, CancellationToken cancellationToken)
+        public async Task EditProject(ProjectDTO dto, CancellationToken cancellationToken)
         {
             _context.Projects.Update(_mapper.Map<Project>(dto));
             
@@ -75,7 +76,7 @@ namespace TaskManager.BLL.Services
             if (!id.HasValue)
                 throw new ValidationException("Project ID not set", "");
 
-            Project project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
             return _mapper.Map<ProjectDTO>(project);
         }

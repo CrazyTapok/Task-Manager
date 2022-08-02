@@ -8,20 +8,15 @@ namespace TaskManager.BLL.MappingProfiles
     {
         public MappingProfile()
         {
-            CreateMap<Company, CompanyDTO>();
-            CreateMap<CompanyDTO, Company>();
+            CreateMap<Company, CompanyDTO>().ReverseMap();
 
-            CreateMap<Employee, EmployeeDTO>();
-            CreateMap<EmployeeDTO, Employee>();
+            CreateMap<Employee, EmployeeDTO>().ReverseMap();
 
-            CreateMap<Project, ProjectDTO>();
-            CreateMap<ProjectDTO, Project>();
+            CreateMap<Project, ProjectDTO>().ReverseMap();
 
-            CreateMap<Task, TaskDTO>();
-            CreateMap<TaskDTO, Task>();
+            CreateMap<Task, TaskDTO>().ReverseMap();
 
-            CreateMap<Role, RoleDTO>();
-            CreateMap<RoleDTO, Role>();
+            CreateMap<Role, RoleDTO>().ReverseMap();
         }
     }
 }
