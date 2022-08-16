@@ -17,10 +17,10 @@ namespace TaskManager.BLL.Services
 
         private readonly IMapper _mapper;
 
-        public TaskService(ApplicationContext dbContext, IMapper mapper)
+        public TaskService(ApplicationContext context, IMapper mapper)
         {
-            _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _mapper = mapper;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _mapper = mapper ?? throw new ArgumentException(nameof(mapper));
         }
 
 
@@ -60,12 +60,7 @@ namespace TaskManager.BLL.Services
 
         public async Task<IEnumerable<TaskDTO>> GetAllTasks(CancellationToken cancellationToken)
         {
-            var tasks = await _context.Tasks
-                .Include(c => c.CreateEmployee)
-                .Include(a => a.AssinedEmployee)
-                .ToListAsync(cancellationToken);
-
-            return _mapper.Map<IEnumerable<TaskDTO>>(tasks);
+            return await _mapper.ProjectTo<TaskDTO>(_context.Tasks).ToListAsync(cancellationToken);
         }
 
         public async Task<TaskDTO> GetTaskById(Guid? id, CancellationToken cancellationToken)

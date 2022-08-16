@@ -8,7 +8,6 @@ using TaskManager.BLL.DTO;
 using TaskManager.BLL.Infrastructure;
 using TaskManager.BLL.Interfaces;
 using TaskManager.DAL.EF;
-using TaskManager.DAL.Entities;
 
 namespace TaskManager.BLL.Services
 {
@@ -18,18 +17,16 @@ namespace TaskManager.BLL.Services
 
         private readonly IMapper _mapper;
 
-        public RoleService(ApplicationContext dbContext, IMapper mapper)
+        public RoleService(ApplicationContext context, IMapper mapper)
         {
-            _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _mapper = mapper;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _mapper = mapper ?? throw new ArgumentException(nameof(mapper));
         }
 
 
         public async Task<IEnumerable<RoleDTO>> GetAllRoles(CancellationToken cancellationToken)
         {
-            var roles = await _context.Roles.ToListAsync(cancellationToken);
-
-            return _mapper.Map<IEnumerable<RoleDTO>>(roles);
+            return await _mapper.ProjectTo<RoleDTO>(_context.Roles).ToListAsync(cancellationToken);
         }
 
         public async Task<RoleDTO> GetRoleById(Guid? id, CancellationToken cancellationToken)

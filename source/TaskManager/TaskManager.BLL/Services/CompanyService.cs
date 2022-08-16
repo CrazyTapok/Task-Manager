@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,10 @@ namespace TaskManager.BLL.Services
 
         private readonly IMapper _mapper;
 
-        public CompanyService(ApplicationContext dbContext, IMapper mapper)
+        public CompanyService(ApplicationContext context, IMapper mapper)
         {
-            _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _mapper = mapper;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _mapper = mapper ?? throw new ArgumentException(nameof(mapper));
         }
 
         public async Task CreateComany(CompanyDTO dto, CancellationToken cancellationToken)
@@ -62,9 +63,7 @@ namespace TaskManager.BLL.Services
 
         public async Task<IEnumerable<CompanyDTO>> GetAllCompanies(CancellationToken cancellationToken)
         {
-            var companies = await _context.Companies.ToListAsync(cancellationToken);
-
-            return _mapper.Map<IEnumerable<CompanyDTO>>(companies);
+            return await _mapper.ProjectTo<CompanyDTO>(_context.Companies).ToListAsync(cancellationToken);
         }
 
         public async Task<CompanyDTO> GetCompanyById(Guid? id, CancellationToken cancellationToken)
